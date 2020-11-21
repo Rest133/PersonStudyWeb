@@ -96,7 +96,7 @@ window.addEventListener("DOMContentLoaded", () => {
     //Modal
     const modalElement = document.querySelector('.modal')
 
-    function toggleModal(){
+    function toggleModal() {
         modalElement.classList.toggle('hide');
     }
 
@@ -105,6 +105,7 @@ window.addEventListener("DOMContentLoaded", () => {
         if (target && target.hasAttribute('data-modal')) {
             toggleModal();
             document.body.style.overflow = 'hidden';
+            clearInterval(modalTimerId);
         }
         if (target && target.hasAttribute('data-close') || target && target === modalElement) {
             toggleModal();
@@ -112,9 +113,21 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     })
 
-    document.addEventListener('keydown',(event)=>{
-        if(event.code==='Escape' && !modalElement.classList.contains('hide')){
+    document.addEventListener('keydown', (event) => {
+        if (event.code === 'Escape' && !modalElement.classList.contains('hide')) {
             toggleModal();
         }
     })
+
+    const modalTimerId = setTimeout(toggleModal, 10000);
+
+    function showModalByScroll() {
+        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+            toggleModal();
+            document.body.style.overflow = 'hidden';
+            window.removeEventListener("scroll", showModalByScroll);
+        }
+    }
+    window.addEventListener("scroll", showModalByScroll);
+
 })
