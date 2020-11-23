@@ -1,12 +1,13 @@
 "use strict"
 
 class Menu {
-    constructor(srcImage, alt, title, text, price) {
+    constructor(srcImage, alt, title, text, price, ...classes) {
         this.srcImage = srcImage;
         this.alt = alt;
         this.title = title;
         this.text = text;
         this.price = price;
+        this.classes = classes;
         this.transfer = 1;
 
         this.transferTo();
@@ -17,8 +18,14 @@ class Menu {
     }
 
     render(parentElement) {
-        document.querySelector(parentElement).firstElementChild.innerHTML += `
-                <div class="menu__item">
+        let childElement = document.querySelector(parentElement).firstElementChild;
+        let classString = '';
+        this.classes.forEach(className => classString += ` ${className}`);
+        if (classString == '') {
+            classString = 'menu__item';
+        }
+        childElement.innerHTML += `
+                <div class="${classString}">
                 <img src=${this.srcImage} alt=${this.alt}>
                 <h3 class="menu__item-subtitle">${this.title}</h3>
                 <div class="menu__item-descr">${this.text}</div>
@@ -168,7 +175,8 @@ window.addEventListener("DOMContentLoaded", () => {
         `Меню "Фитнес"`,
         'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. ' +
         'Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-        "229"
+        "229",
+        'menu__item',
     ).render('.menu__field')
 
     new Menu(
@@ -177,7 +185,8 @@ window.addEventListener("DOMContentLoaded", () => {
         `Меню “Премиум”`,
         'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и ' +
         'качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-        "550"
+        "550",
+        'menu__item'
     ).render('.menu__field')
 
     new Menu(
@@ -187,6 +196,6 @@ window.addEventListener("DOMContentLoaded", () => {
         'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного ' +
         'происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу ' +
         'и импортных вегетарианских стейков.',
-        "430"
+        "430",
     ).render('.menu__field')
 })
