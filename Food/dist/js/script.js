@@ -1,5 +1,36 @@
 "use strict"
 
+class Menu {
+    constructor(srcImage, alt, title, text, price) {
+        this.srcImage = srcImage;
+        this.alt = alt;
+        this.title = title;
+        this.text = text;
+        this.price = price;
+        this.transfer = 1;
+
+        this.transferTo();
+    }
+
+    transferTo() {
+        this.price = this.price * this.transfer;
+    }
+
+    render(parentElement) {
+        document.querySelector(parentElement).firstElementChild.innerHTML += `
+                <div class="menu__item">
+                <img src=${this.srcImage} alt=${this.alt}>
+                <h3 class="menu__item-subtitle">${this.title}</h3>
+                <div class="menu__item-descr">${this.text}</div>
+                <div class="menu__item-divider"></div>
+                <div class="menu__item-price">
+                    <div class="menu__item-cost">Цена:</div>
+                    <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+                </div>
+                </div>`
+    }
+}
+
 window.addEventListener("DOMContentLoaded", () => {
 
     const tabs = document.querySelectorAll('.tabheader__item'),
@@ -40,7 +71,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     //Timer
 
-    const deadline = '2020-11-22';
+    const deadline = '2020-12-31';
 
     function getTimeRemaining(deadline) {
         let time, days, hours, minutes, seconds;
@@ -128,6 +159,34 @@ window.addEventListener("DOMContentLoaded", () => {
             window.removeEventListener("scroll", showModalByScroll);
         }
     }
+
     window.addEventListener("scroll", showModalByScroll);
 
+    new Menu(
+        "img/tabs/vegy.jpg",
+        "vegy",
+        `Меню "Фитнес"`,
+        'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. ' +
+        'Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
+        "229"
+    ).render('.menu__field')
+
+    new Menu(
+        "img/tabs/elite.jpg",
+        "elite",
+        `Меню “Премиум”`,
+        'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и ' +
+        'качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
+        "550"
+    ).render('.menu__field')
+
+    new Menu(
+        "img/tabs/post.jpg",
+        "post",
+        `Меню "Постное"`,
+        'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного ' +
+        'происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу ' +
+        'и импортных вегетарианских стейков.',
+        "430"
+    ).render('.menu__field')
 })
