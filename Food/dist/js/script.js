@@ -227,10 +227,6 @@ window.addEventListener("DOMContentLoaded", () => {
             `;
             form.insertAdjacentElement('afterend', statusMessage);
 
-            const request = new XMLHttpRequest();
-
-            request.open('POST', 'server.php');
-            request.setRequestHeader('Content-type', 'application/json');
             const formData = new FormData(form); // при верстке важно указывать аттрибут name в инпутах формы
 
             const object = {};
@@ -239,19 +235,24 @@ window.addEventListener("DOMContentLoaded", () => {
                 object[key] = value;
             })
 
-            const json = JSON.stringify(object);
-            request.send(json);
+            fetch('server.php', {
+                method: "POST",
 
-            request.addEventListener('load', () => {
-                if (request.status === 200) {
-                    console.log(request.response);
+                headers: {
+                    'Content-type': 'application/json'
+                },
+
+                body: JSON.stringify(object)
+            }).then(data => data.text())
+                .then(data => {
+                    console.log(data);
                     showThanksModal(message.success);
-                    form.reset();
-                } else {
-                    showThanksModal(message.failure);
-                }
+                    statusMessage.remove();
+                }).catch(() => {
+                showThanksModal(message.failure);
+            }).finally(() => {
+                form.reset();
             })
-            statusMessage.remove();
         })
     }
 
@@ -278,4 +279,14 @@ window.addEventListener("DOMContentLoaded", () => {
             toggleModal();
         }, 4000)
     }
+
+    fetch('https://jsonplaceholder.typicode.com/posts', {
+        method: "POST",
+        body: JSON.stringify({name: "Alex"}),
+        headers: {
+            'Content-type': 'application/json'
+        }
+    })
+        .then(response => response.json())
+        .then(json => console.log(json))
 })
