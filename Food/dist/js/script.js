@@ -180,13 +180,12 @@ window.addEventListener("DOMContentLoaded", () => {
         return await res.json();
     }
 
-    getResources('http://localhost:3000/menu') //srcImage, alt, title, text, price, ...classes
+    axios.get('http://localhost:3000/menu')
         .then(data => {
-            data.forEach(({img, alt, title, descr, price}) => {
+            data.data.forEach(({img, alt, title, descr, price}) => {
                 new Menu(img, alt, title, descr, price).render('.menu__field');
             });
-        });
-
+        })
 
     //Forms
 
@@ -216,7 +215,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     function bindPostData(form) {
         form.addEventListener('submit', (e) => {
-            e.preventDefault(); // чтобы страница не перезагружалась при отправки формы, так как это стандартное поведени браузера
+            e.preventDefault();
 
             const statusMessage = document.createElement('img');
             statusMessage.src = message.loading;
@@ -226,7 +225,7 @@ window.addEventListener("DOMContentLoaded", () => {
             `;
             form.insertAdjacentElement('afterend', statusMessage);
 
-            const formData = new FormData(form); // при верстке важно указывать аттрибут name в инпутах формы
+            const formData = new FormData(form);
 
             const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
@@ -267,7 +266,61 @@ window.addEventListener("DOMContentLoaded", () => {
         }, 4000)
     }
 
-    fetch('http://localhost:3000/menu')
-        .then(data => data.json())
-        .then(res => console.log(res));
+
+    //Slider
+    let slider = document.querySelector('.offer__slider');
+    let allSlides = slider.querySelectorAll('.offer__slide');
+    const prevSlideButton = slider.querySelector('.offer__slider-prev');
+    const nextSlideButton = slider.querySelector('.offer__slider-next');
+    let currentSlideIndex = slider.querySelector('#current');
+    let totalSlideIndex = slider.querySelector('#total');
+    let index = 0;
+
+    prevSlideButton.addEventListener('click', event => {
+        const target = event.target;
+        if (target && target.classList.contains('offer__slider-prev')) {
+            index--;
+            if (index < 0) index = allSlides.length - 1;
+            changeSlide(index);
+        }
+    });
+
+    nextSlideButton.addEventListener('click', event => {
+        const target = event.target;
+        if (target && target.classList.contains('offer__slider-next')) {
+            index++;
+            if (index >= allSlides.length) index = 0;
+            changeSlide(index);
+        }
+    });
+
+
+    function changeSlide(index = 0) {
+        allSlides.forEach((slide, i) => {
+            if (index === i) {
+                slide.classList.remove('hide');
+            } else slide.classList.add('hide');
+        })
+        changeCurrentSlideIndex(index + 1);
+    }
+
+    function changeCurrentSlideIndex(index) {
+        if (index < 10) {
+            currentSlideIndex.textContent = `0${index}`;
+        } else currentSlideIndex.textContent = index;
+    }
+
+    function initialiseSlider() {
+        if (allSlides.length < 10) {
+            totalSlideIndex.textContent = `0${allSlides.length}`;
+        } else totalSlideIndex.textContent = `${allSlides.length}`;
+        changeSlide();
+    }
+
+    const sliderTimer = setTimeout(() => {
+        index++;
+        changeSlide(index);
+    }, 3000)
+
+    initialiseSlider();
 })
