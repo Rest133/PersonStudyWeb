@@ -268,41 +268,78 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
     //Slider
-    let slider = document.querySelector('.offer__slider');
-    let allSlides = slider.querySelectorAll('.offer__slide');
-    const prevSlideButton = slider.querySelector('.offer__slider-prev');
-    const nextSlideButton = slider.querySelector('.offer__slider-next');
-    let currentSlideIndex = slider.querySelector('#current');
-    let totalSlideIndex = slider.querySelector('#total');
+    let slider = document.querySelector('.offer__slider'),
+        allSlides = slider.querySelectorAll('.offer__slide'),
+        currentSlideIndex = slider.querySelector('#current'),
+        totalSlideIndex = slider.querySelector('#total');
+    const prevSlideButton = slider.querySelector('.offer__slider-prev'),
+        nextSlideButton = slider.querySelector('.offer__slider-next'),
+        slidesWrapper = document.querySelector('.offer__slider-wrapper'),
+        sliderField = document.querySelector('.offer__slider-inner'),
+        width = window.getComputedStyle(slidesWrapper).width;
     let index = 0;
+    let offset = 0;
 
-    prevSlideButton.addEventListener('click', event => {
-        const target = event.target;
-        if (target && target.classList.contains('offer__slider-prev')) {
-            index--;
-            if (index < 0) index = allSlides.length - 1;
-            changeSlide(index);
-        }
-    });
+    sliderField.style.width = allSlides.length * 100 + '%';
+    sliderField.style.display = 'flex';
+    sliderField.style.transition = '0.5s all';
+
+    slidesWrapper.style.overflow = 'hidden';
+    allSlides.forEach(slide => {
+        slide.style.width = width;
+    })
 
     nextSlideButton.addEventListener('click', event => {
-        const target = event.target;
-        if (target && target.classList.contains('offer__slider-next')) {
-            index++;
-            if (index >= allSlides.length) index = 0;
-            changeSlide(index);
+        if (offset == +width.slice(0, width.length - 2) * (allSlides.length - 1)) {
+            offset = 0;
+        } else {
+            offset += +width.slice(0, width.length - 2);
         }
+        index++;
+        if (index >= allSlides.length) index = 0;
+        changeCurrentSlideIndex(index + 1);
+        sliderField.style.transform = `translateX(-${offset}px)`;
     });
 
-
-    function changeSlide(index = 0) {
-        allSlides.forEach((slide, i) => {
-            if (index === i) {
-                slide.classList.remove('hide');
-            } else slide.classList.add('hide');
-        })
+    prevSlideButton.addEventListener('click', event => {
+        if (offset == 0) {
+            offset = +width.slice(0, width.length - 2)*(allSlides.length - 1);
+        } else {
+            offset -= +width.slice(0, width.length - 2);
+        }
+        index--;
+        if (index < 0) index = allSlides.length - 1;
         changeCurrentSlideIndex(index + 1);
-    }
+        sliderField.style.transform = `translateX(-${offset}px)`;
+    });
+
+    // prevSlideButton.addEventListener('click', event => {
+    //     const target = event.target;
+    //     if (target && target.classList.contains('offer__slider-prev')) {
+    //         index--;
+    //         if (index < 0) index = allSlides.length - 1;
+    //         changeSlide(index);
+    //     }
+    // });
+    //
+    // nextSlideButton.addEventListener('click', event => {
+    //     const target = event.target;
+    //     if (target && target.classList.contains('offer__slider-next')) {
+    //         index++;
+    //         if (index >= allSlides.length) index = 0;
+    //         changeSlide(index);
+    //     }
+    // });
+    //
+    //
+    // function changeSlide(index = 0) {
+    //     allSlides.forEach((slide, i) => {
+    //         if (index === i) {
+    //             slide.classList.remove('hide');
+    //         } else slide.classList.add('hide');
+    //     })
+    //     changeCurrentSlideIndex(index + 1);
+    // }
 
     function changeCurrentSlideIndex(index) {
         if (index < 10) {
@@ -314,13 +351,15 @@ window.addEventListener("DOMContentLoaded", () => {
         if (allSlides.length < 10) {
             totalSlideIndex.textContent = `0${allSlides.length}`;
         } else totalSlideIndex.textContent = `${allSlides.length}`;
-        changeSlide();
+        //changeSlide();
+        changeCurrentSlideIndex(1);
     }
 
-    const sliderTimer = setTimeout(() => {
-        index++;
-        changeSlide(index);
-    }, 3000)
-
+    //
+    // const sliderTimer = setTimeout(() => {
+    //     index++;
+    //     changeSlide(index);
+    // }, 3000)
+    //
     initialiseSlider();
 })
