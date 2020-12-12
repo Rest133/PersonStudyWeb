@@ -1,3 +1,5 @@
+import forms from "./forms";
+
 function pageCalculator() {
 
     //Calc
@@ -108,4 +110,4 @@ function pageCalculator() {
     getDynamicInformation('#weight');
 }
 
-module.exports = pageCalculator;
+export default pageCalculator;

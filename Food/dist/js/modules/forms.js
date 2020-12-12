@@ -1,7 +1,10 @@
-function forms() {
+import {toggleModal} from "./modal";
+import {postData} from "../services/services";
+
+function forms(selectorForm) {
     //Forms
 
-    const forms = document.querySelectorAll('form');
+    const forms = document.querySelectorAll(selectorForm);
 
     const message = {
         loading: 'img/spinner.svg',
@@ -13,17 +16,6 @@ function forms() {
         bindPostData(item);
     })
 
-    const postData = async (url, data) => {
-        const res = await fetch(url, {
-            method: "POST",
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: data
-        });
-
-        return await res.json();
-    }
 
     function bindPostData(form) {
         form.addEventListener('submit', (e) => {
@@ -41,7 +33,7 @@ function forms() {
 
             const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
-            postData('http://localhost:3000/requests', JSON.stringify(object))
+            postData('http://localhost:3000/requests', json)
                 .then(data => {
                     console.log(data);
                     showThanksModal(message.success);
@@ -80,4 +72,4 @@ function forms() {
 
 }
 
-module.exports = forms;
+export default forms;

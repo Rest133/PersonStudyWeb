@@ -1,3 +1,5 @@
+import forms from "./forms";
+
 function slider() {
 //Slider
     let slider = document.querySelector('.offer__slider'),
@@ -102,4 +104,4 @@ function slider() {
 }
 
 
-module.exports = slider;
+export default slider;

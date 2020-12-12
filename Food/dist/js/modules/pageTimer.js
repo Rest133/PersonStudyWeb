@@ -1,7 +1,6 @@
-function pageTimer() {
-    //Timer
+import forms from "./forms";
 
-    const deadline = '2020-12-31';
+function pageTimer(timerSelector, deadline) {
 
     function getTimeRemaining(deadline) {
         let time, days, hours, minutes, seconds;
@@ -52,8 +51,8 @@ function pageTimer() {
         }
     }
 
-    setClock('.timer', deadline);
+    setClock(timerSelector, deadline);
 }
 
 
-module.exports = pageTimer;
+export default pageTimer;

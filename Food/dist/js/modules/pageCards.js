@@ -1,3 +1,6 @@
+import forms from "./forms";
+import {getResources} from "../services/services";
+
 function pageCards() {
     class Menu {
         constructor(srcImage, alt, title, text, price, ...classes) {
@@ -37,16 +40,6 @@ function pageCards() {
         }
     }
 
-    const getResources = async (url) => {
-        const res = await fetch(url);
-
-        if (!res.ok) {
-            throw new Error(`Could not fetch ${url}, status: ${res.status}`)
-        }
-
-        return await res.json();
-    }
-
     axios.get('http://localhost:3000/menu')
         .then(data => {
             data.data.forEach(({img, alt, title, descr, price}) => {
@@ -55,4 +48,4 @@ function pageCards() {
         })
 }
 
-module.exports = pageCards;
+export default pageCards;
